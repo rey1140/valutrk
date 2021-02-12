@@ -1,12 +1,12 @@
 import streamlit as st 
-import plotly as py 
+import plotly.express as px 
 import pandas as pd 
 import cufflinks as cf 
 import seaborn  as sns 
-# import numpy as np 
-# import plotly.graph_objects as go
-# import matplotlib.pyplot as plt 
-# from scipy import stats 
+import numpy as np 
+import plotly.graph_objects as go
+import matplotlib.pyplot as plt 
+from scipy import stats 
 
 
 
