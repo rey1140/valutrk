@@ -103,7 +103,7 @@ if chart_select == 'Scatterplots':
 		Z_values = st.sidebar.selectbox('Z category', options=numeric_columns)
 
 		st.set_option('deprecation.showPyplotGlobalUse', False)
-		sns.relplot(x=x_values, y=y_values, hue = Z_values,data=df,height = 8, aspect = 1.3)
+		sns.relplot(x=x_values, y=y_values, hue = Z_values,data=df,height = 8, aspect = 1.5)
 		plt.title("Keeteelee Scatter Plot Expense Breakdown by Delivery Country")
 		st.pyplot()
 	except Exception as e:
