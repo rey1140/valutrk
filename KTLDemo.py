@@ -90,7 +90,7 @@ if uploaded_file is not None:
 #add a select widget to teh side bar
 chart_select = st.sidebar.selectbox(
 	label = "Select the chart type",
-	options = ['Scatterplots','Violinplots','Barplots','Boxplots','Lineplots','Jointplots','lmplot']
+	options = ['Scatterplots','Violinplots','Barplots','Boxplots','Lineplots','Jointplots','lmplot','Forecasting']
 	)
 
 
@@ -181,5 +181,42 @@ if chart_select == 'lmplot':
 		sns.lmplot(x=x_values, y=y_values, hue = Z_values,data=df, markers=['o','^'])
 		plt.title("Keeteelee LMPlot Order Total by Country with mean-line")
 		st.pyplot()
+	except Exception as e:
+		print(e)
+		
+if chart_select == 'Forecasting':
+	st.sidebar.subheader("Settings:")
+	try:
+		X = df.iloc[:, :-1].values
+		y = df.iloc[:, -1].values
+		#X = st.sidebar.multiselect('Features',options = feature_columns)
+		#y = st.sidebar.selectbox('Label', options = label_columns)
+		# Z_values = st.sidebar.selectbox('Z category', options=numeric_columns)
+		
+		print(X)
+		# Encoding categorical data		
+		from sklearn.compose import ColumnTransformer
+		from sklearn.preprocessing import OneHotEncoder
+		ct = ColumnTransformer(transformers=[('encoder', OneHotEncoder(), [3])], remainder='passthrough')
+		X = np.array(ct.fit_transform(X))
+		print(X)
+		st.subheader("R&D Spend(3) vs Administrative Spend(4) vs Marketing Spend(5)")
+		st.line_chart(X)
+		# Splitting the dataset into the Training set and Test set
+		from sklearn.model_selection import train_test_split
+		X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
+
+		# Training the Multiple Linear Regression model on the Training set
+		from sklearn.linear_model import LinearRegression
+		regressor = LinearRegression()
+		regressor.fit(X_train, y_train)
+
+		# Predicting the Test set results
+		y_pred = regressor.predict(X_test)
+		np.set_printoptions(precision=2)
+		dfF = np.concatenate((y_pred.reshape(len(y_pred),1), y_test.reshape(len(y_test),1)),1)
+		st.write(np.concatenate((y_pred.reshape(len(y_pred),1), y_test.reshape(len(y_test),1)),1))
+		st.subheader("Yearly Profit Prediction(1) vs Actual (0)")
+		st.line_chart(dfF)
 	except Exception as e:
 		print(e)
